@@ -1,0 +1,35 @@
+---
+globs: *.css
+---
+
+# CSS Guidelines
+
+## Architecture
+- Use CSS custom properties (variables) for theming
+- Implement dark mode with `[data-theme="dark"]` attribute
+- Follow mobile-first responsive design approach
+- Use BEM-like naming convention for classes
+
+## Theming System
+- Define color variables in `:root` for light mode
+- Override variables for dark mode using `[data-theme="dark"]`
+- Respect system preference with `@media (prefers-color-scheme: dark)`
+- Use consistent color palette: accent-green (#10b981) as primary
+
+## Responsive Design
+- Breakpoints: 768px (tablet), 480px (mobile)
+- Use flexible units (rem, em, %) over fixed pixels
+- Implement smooth transitions with `cubic-bezier(0.4, 0, 0.2, 1)`
+- Ensure touch-friendly interactive elements (min 44px)
+
+## Performance
+- Use efficient selectors
+- Minimize CSS specificity conflicts
+- Group related styles together
+- Use `transform` and `opacity` for animations (GPU accelerated)
+
+## Dark Mode Implementation
+- Store theme preference in localStorage
+- Provide smooth transitions between themes
+- Update toggle button icon and aria-label
+- Maintain consistent visual hierarchy in both modes

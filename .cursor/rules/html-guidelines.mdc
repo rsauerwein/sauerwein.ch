@@ -1,0 +1,31 @@
+---
+globs: *.html
+---
+
+# HTML Guidelines
+
+## Structure and Semantics
+- Use semantic HTML5 elements (`<header>`, `<section>`, `<main>`)
+- Always include proper meta tags for SEO and social sharing
+- Maintain German language content (`lang="de"`)
+- Include Open Graph and Twitter Card meta tags
+- Use proper heading hierarchy (h1, h2, etc.)
+
+## Accessibility
+- Include `aria-label` attributes for interactive elements
+- Use `rel="noopener noreferrer"` for external links
+- Ensure proper alt text for images
+- Maintain focus states for keyboard navigation
+
+## Content Guidelines
+- Keep personal information in German
+- Profile section should be centered and prominent
+- Social links should be easily accessible
+- Maintain professional tone throughout
+
+## Meta Tags Required
+- Title, description, keywords
+- Open Graph tags (og:type, og:url, og:title, og:description, og:image)
+- Twitter Card tags
+- Canonical URL
+- Theme color and viewport settings
