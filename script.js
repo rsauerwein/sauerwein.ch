@@ -43,11 +43,14 @@ class DarkModeToggle {
         const newTheme = this.theme === 'light' ? 'dark' : 'light';
         this.setTheme(newTheme);
         
-        // Add a subtle animation to the toggle button
-        this.toggleButton.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-            this.toggleButton.style.transform = 'scale(1)';
-        }, 150);
+        // Add a subtle animation to the toggle button (respect reduced motion)
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!prefersReduced) {
+            this.toggleButton.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.toggleButton.style.transform = 'scale(1)';
+            }, 150);
+        }
     }
     
     setTheme(theme) {
@@ -61,6 +64,7 @@ class DarkModeToggle {
         // Update aria-label for accessibility
         this.toggleButton.setAttribute('aria-label', 
             `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
+        this.toggleButton.setAttribute('aria-pressed', theme === 'dark');
     }
 }
 
@@ -84,26 +88,32 @@ class ScrollAnimations {
     }
     
     observeElements() {
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const elements = document.querySelectorAll('.social-link, .projects-placeholder');
         
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    if (!prefersReduced) {
+                        entry.target.style.transform = 'translateY(0)';
+                    } else {
+                        entry.target.style.transform = 'none';
+                    }
                 }
             });
         }, this.observerOptions);
         
         elements.forEach(el => {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            el.style.transform = prefersReduced ? 'none' : 'translateY(20px)';
+            el.style.transition = prefersReduced ? 'opacity 0.2s ease' : 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
     }
     
     addSmoothScroll() {
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         // Add smooth scroll for any future internal navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -111,7 +121,7 @@ class ScrollAnimations {
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({
-                        behavior: 'smooth',
+                        behavior: prefersReduced ? 'auto' : 'smooth',
                         block: 'start'
                     });
                 }
@@ -148,12 +158,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize analytics
     new Analytics();
     
-    // Add a subtle loading animation
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        document.body.style.transition = 'opacity 0.5s ease';
-        document.body.style.opacity = '1';
-    }, 100);
+    // Add a subtle loading animation (respect reduced motion)
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            document.body.style.transition = 'opacity 0.5s ease';
+            document.body.style.opacity = '1';
+        }, 100);
+    }
 });
 
 // Add some fun easter eggs
