@@ -135,15 +135,53 @@ class Analytics {
     constructor() {
         this.init();
     }
-    
+
     init() {
         // Track social link clicks
         document.querySelectorAll('.social-link').forEach(link => {
             link.addEventListener('click', (e) => {
-                const platform = link.classList.contains('github') ? 'GitHub' : 'LinkedIn';
+                let platform = 'Unknown';
+                if (link.classList.contains('github')) platform = 'GitHub';
+                else if (link.classList.contains('linkedin')) platform = 'LinkedIn';
+                else if (link.classList.contains('email')) platform = 'Email';
                 console.log(`Social link clicked: ${platform}`);
             });
         });
+    }
+}
+
+// Email protection - assembles email address only on interaction
+class EmailProtection {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        const emailLinks = document.querySelectorAll('.social-link.email[data-user][data-domain]');
+
+        emailLinks.forEach(link => {
+            // Handle click
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.openEmail(link);
+            });
+
+            // Handle keyboard (Enter/Space)
+            link.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.openEmail(link);
+                }
+            });
+        });
+    }
+
+    openEmail(link) {
+        const user = link.dataset.user;
+        const domain = link.dataset.domain;
+        if (user && domain) {
+            window.location.href = 'mailto:' + user + '@' + domain;
+        }
     }
 }
 
@@ -151,12 +189,15 @@ class Analytics {
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize dark mode toggle
     new DarkModeToggle();
-    
+
     // Initialize scroll animations
     new ScrollAnimations();
-    
+
     // Initialize analytics
     new Analytics();
+
+    // Initialize email protection
+    new EmailProtection();
     
     // Add a subtle loading animation (respect reduced motion)
     const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

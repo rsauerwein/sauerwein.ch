@@ -262,6 +262,17 @@ body {
     color: #ffffff;
 }
 
+/* Email specific styling */
+.social-link.email:hover {
+    background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+    color: #ffffff;
+}
+
+/* Email decoy text - hidden from visual display but visible to bots */
+.email-decoy {
+    display: none !important;
+}
+
 /* Projects Placeholder */
 .projects-placeholder {
     text-align: center;
